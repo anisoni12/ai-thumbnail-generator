@@ -1,0 +1,40 @@
+# Python
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+*.pyc
+*.pyo
+
+# Env files
+.env
+backend/.env
+frontend/.env
+
+# Database
+backend/*.db
+backend/*.db-journal
+
+# Generated thumbnails / outputs
+backend/generated/
+backend/outputs/
+backend/temp/
+backend/uploads/
+
+# Test artifacts
+backend/test_output_*.jpg
+backend/test_output_*.png
+
+# Logs
+*.log
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
