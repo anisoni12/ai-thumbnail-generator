@@ -56,3 +56,9 @@ export const getAllJobs = async () => {
   }
   return response.json();
 };
+
+export const clearAllJobs = async () => {
+  const response = await fetch(`${API_BASE_URL}/api/jobs`, { method: 'DELETE' });
+  if (!response.ok) throw new Error('Failed to clear history');
+  return response.json();
+};

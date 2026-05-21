@@ -251,6 +251,17 @@ def get_job_thumbnails(job_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Job not found")
     return job.thumbnails
 
+@app.delete("/api/jobs")
+def clear_all_jobs(db: Session = Depends(get_db)):
+    thumbnails = db.exec(select(Thumbnail)).all()
+    for t in thumbnails:
+        db.delete(t)
+    jobs = db.exec(select(Job)).all()
+    for j in jobs:
+        db.delete(j)
+    db.commit()
+    return {"deleted": True}
+
 @app.get("/api/jobs")
 def get_all_jobs(db: Session = Depends(get_db)):
     jobs = db.exec(select(Job).order_by(Job.id.desc())).all()
