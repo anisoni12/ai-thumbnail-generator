@@ -4,7 +4,7 @@
 
 A full-stack AI project that combines **Google Gemini**, **local image compositing**, and **real-time streaming** to generate styled YouTube-style thumbnails — built entirely on free-tier APIs.
 
-![Demo](./demo.gif)
+![Demo](https://github.com/anisoni12/ai-thumbnail-generator/raw/main/demo.gif)
 
 ---
 
