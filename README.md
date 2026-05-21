@@ -2,11 +2,11 @@
 
 > Upload a headshot. Describe your video. Get designed thumbnails in seconds.
 
+![Demo](./demo.gif)
+
 A full-stack AI project that combines **Google Gemini**, **local image compositing**, and **real-time streaming** to generate styled YouTube-style thumbnails — built entirely on free-tier APIs.
 
 ---
-
-![Demo](./demo.gif)
 
 ## What It Actually Does
 
