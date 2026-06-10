@@ -18,7 +18,7 @@ def _ensure_session():
         return _session
     try:
         from rembg import new_session  # type: ignore
-        _session = new_session("u2net")
+        _session = new_session("u2netp")
         _rembg_available = True
         return _session
     except Exception as e:
@@ -26,19 +26,15 @@ def _ensure_session():
         _rembg_available = False
         return None
 
-
 def remove_background(image_bytes: bytes) -> bytes | None:
-    """Return PNG bytes (with alpha) of the input image with background removed.
-    Returns None if removal fails or rembg isn't installed.
-    """
     session = _ensure_session()
     if session is None:
         return None
     try:
-        from rembg import remove  # type: ignore
-        # rembg returns PNG bytes when input is bytes
+        from rembg import remove
+        print(f"[bg_removal] starting removal, input size: {len(image_bytes)} bytes")
         result = remove(image_bytes, session=session)
-        # Validate it's a real RGBA PNG
+        print(f"[bg_removal] removal complete, output size: {len(result)} bytes")
         img = Image.open(io.BytesIO(result))
         if img.mode != "RGBA":
             img = img.convert("RGBA")
