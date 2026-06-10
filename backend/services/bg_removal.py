@@ -1,46 +1,25 @@
-"""AI background removal using rembg (U2Net). Runs locally, no API key needed.
-
-First call downloads the ~170MB U2Net model into ~/.u2net/. Subsequent calls are cached.
-"""
-import io
-from PIL import Image
-
-_session = None
-_rembg_available = None
-
-
-def _ensure_session():
-    """Lazy-load rembg session. Returns None if rembg isn't installed."""
-    global _session, _rembg_available
-    if _rembg_available is False:
-        return None
-    if _session is not None:
-        return _session
-    try:
-        from rembg import new_session  # type: ignore
-        _session = new_session("u2netp")
-        _rembg_available = True
-        return _session
-    except Exception as e:
-        print(f"[bg_removal] rembg unavailable, skipping background removal: {e}")
-        _rembg_available = False
-        return None
+import os
+import requests
 
 def remove_background(image_bytes: bytes) -> bytes | None:
-    session = _ensure_session()
-    if session is None:
+    api_key = os.getenv("REMOVE_BG_API_KEY")
+    if not api_key:
+        print("[bg_removal] REMOVE_BG_API_KEY not set, skipping")
         return None
     try:
-        from rembg import remove
-        print(f"[bg_removal] starting removal, input size: {len(image_bytes)} bytes")
-        result = remove(image_bytes, session=session)
-        print(f"[bg_removal] removal complete, output size: {len(result)} bytes")
-        img = Image.open(io.BytesIO(result))
-        if img.mode != "RGBA":
-            img = img.convert("RGBA")
-        out = io.BytesIO()
-        img.save(out, format="PNG")
-        return out.getvalue()
+        print("[bg_removal] calling remove.bg API...")
+        response = requests.post(
+            "https://api.remove.bg/v1.0/removebg",
+            files={"image_file": ("image.png", image_bytes)},
+            data={"size": "auto"},
+            headers={"X-Api-Key": api_key},
+        )
+        if response.status_code == 200:
+            print(f"[bg_removal] success, output size: {len(response.content)} bytes")
+            return response.content
+        else:
+            print(f"[bg_removal] API error: {response.status_code} {response.text}")
+            return None
     except Exception as e:
-        print(f"[bg_removal] removal failed: {e}")
+        print(f"[bg_removal] failed: {e}")
         return None
