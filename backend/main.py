@@ -23,14 +23,7 @@ job_events = {}
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_db_and_tables()
-    # Warm up the rembg model so the first job isn't slow (also downloads on first ever run)
-    try:
-        import threading
-        from services.bg_removal import _ensure_session
-        threading.Thread(target=_ensure_session, daemon=True).start()
-        print("[startup] bg_removal model warm-up scheduled")
-    except Exception as e:
-        print(f"[startup] bg_removal warm-up skipped: {e}")
+    print("[startup] ready")
     yield
 
 app = FastAPI(lifespan=lifespan)
